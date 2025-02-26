@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/saladinomario/vr-training-admin/internal/handlers"
 )
@@ -19,6 +20,7 @@ func setupRoutes() *http.ServeMux {
 	log.Println("Registering dashboard route")
 	mux.HandleFunc("/", handlers.DashboardHandler)
 	mux.HandleFunc("/dashboard-content", handlers.DashboardContentHandler)
+
 	// Register scenario routes
 	log.Println("Setting up scenario routes")
 	handlers.SetupScenarioRoutes(mux)
@@ -61,10 +63,16 @@ func main() {
 	mux := setupRoutes()
 	printRegisteredRoutes()
 
-	log.Println("Server starting on :8080")
-	log.Println("Visit http://localhost:8080 to view the application")
+	// Get port from environment variable
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default to 8080 if PORT not set
+	}
 
-	if err := http.ListenAndServe(":8080", mux); err != nil {
+	log.Printf("Server starting on port %s", port)
+	log.Printf("Visit http://localhost:%s to view the application", port)
+
+	if err := http.ListenAndServe(":"+port, mux); err != nil {
 		log.Fatal(err)
 	}
 }

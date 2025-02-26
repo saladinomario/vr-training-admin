@@ -1,0 +1,49 @@
+[
+  {
+    "id": "session_20250226231004",
+    "scenarioId": "2",
+    "avatarId": "2",
+    "observerId": "1",
+    "status": "running",
+    "startTime": "2025-02-26T23:10:04.112699+01:00",
+    "updateTime": "2025-02-26T23:10:04.114081+01:00"
+  },
+  {
+    "id": "session_20250226134234",
+    "scenarioId": "1",
+    "avatarId": "2",
+    "observerId": "2",
+    "status": "completed",
+    "startTime": "2025-02-26T13:42:34.060955+01:00",
+    "endTime": "2025-02-26T13:42:57.808554+01:00",
+    "updateTime": "2025-02-26T13:42:57.808554+01:00"
+  },
+  {
+    "id": "session_20250226153500",
+    "scenarioId": "1",
+    "avatarId": "2",
+    "observerId": "2",
+    "status": "paused",
+    "startTime": "2025-02-26T15:35:00.403024+01:00",
+    "updateTime": "2025-02-26T15:37:24.436073+01:00"
+  },
+  {
+    "id": "session_20250226113520",
+    "scenarioId": "3",
+    "avatarId": "2",
+    "observerId": "2",
+    "status": "completed",
+    "startTime": "2025-02-26T11:35:20.51991+01:00",
+    "endTime": "2025-02-26T11:37:01.320159+01:00",
+    "updateTime": "2025-02-26T11:37:01.320159+01:00"
+  },
+  {
+    "id": "session_20250226113810",
+    "scenarioId": "1",
+    "avatarId": "1",
+    "observerId": "1",
+    "status": "running",
+    "startTime": "2025-02-26T11:38:10.335666+01:00",
+    "updateTime": "2025-02-26T11:38:10.336753+01:00"
+  }
+]

@@ -129,7 +129,7 @@ func RecentActivity(recentSessions []*sessions.Session) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"card-actions justify-end mt-4\"><a href=\"/sessions\" class=\"btn btn-ghost btn-sm\">View All Sessions</a></div></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<div class=\"card-actions justify-end mt-4\"><a href=\"/sessions\" class=\"btn btn-ghost btn-sm\">View All Sessions (TODO)</a></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

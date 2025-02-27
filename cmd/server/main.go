@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/saladinomario/vr-training-admin/internal/handlers"
+	"github.com/saladinomario/vr-training-admin/internal/models"
 )
 
 // Track registered routes
@@ -60,6 +61,13 @@ func printRegisteredRoutes() {
 }
 
 func main() {
+	// Initialize System Status store
+	unrealEngineUrl := os.Getenv("UNREAL_ENGINE_URL")
+	if unrealEngineUrl == "" {
+		unrealEngineUrl = "http://localhost:8081"
+	}
+	models.SystemStatusStoreInstance = models.NewSystemStatusStore(unrealEngineUrl)
+
 	mux := setupRoutes()
 	printRegisteredRoutes()
 

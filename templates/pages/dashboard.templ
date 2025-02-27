@@ -2,21 +2,20 @@
 package pages
 
 import (
+	"github.com/saladinomario/vr-training-admin/internal/models"
 	"github.com/saladinomario/vr-training-admin/templates/components"
 	"github.com/saladinomario/vr-training-admin/templates/components/sessions"
 )
 
-// templates/pages/dashboard.templ
 templ Dashboard() {
     @components.Layout("Dashboard") {
-        <div id="main-content" hx-get="/dashboard-content" hx-trigger="load">
+        <div id="main-content" hx-get="/dashboard-content" hx-trigger="load, every 10s">
             <!-- Content will be loaded via HTMX -->
         </div>
-        
     }
 }
 
-templ DashboardContent(recentSessions []*sessions.Session) {
+templ DashboardContent(recentSessions []*sessions.Session, status models.SystemStatus) {
     <div class="container mx-auto p-6">
         <!-- Main Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -98,6 +97,45 @@ templ DashboardContent(recentSessions []*sessions.Session) {
                 </div>
             </div>
             
+            <!-- System status -->
+            <div class="lg:col-span-2 card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <span class="text-accent">System Status</span>
+                    </h2>
+                    <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
+                        <div class="stat">
+                            <div class="stat-title">Unreal Engine</div>
+                            <div class={getStatusStyle(status.UnrealEngineConnected)}>
+                                if status.UnrealEngineConnected {
+                                    Connected
+                                } else {
+                                    Disconnected
+                                }
+                            </div>
+                            <div class="stat-desc">
+                                if status.UnrealEngineReady {
+                                    Ready to receive data
+                                } else {
+                                    Not ready
+                                }
+                            </div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-title">WebSocket</div>
+                            <div class={getStatusStyle(status.WebSocketConnected)}>
+                                if status.WebSocketConnected {
+                                    Connected
+                                } else {
+                                    Disconnected
+                                }
+                            </div>
+                            <div class="stat-desc">Active Connections</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Recent Activity -->
             <div class="lg:col-span-3">
                 <div id="recent-activity">
@@ -120,4 +158,13 @@ templ RecentActivity(recentSessions []*sessions.Session) {
             </div>
         </div>
     </div>
+}
+
+// getStatusStyle returns the appropriate class based on the status
+func getStatusStyle(status bool) string {
+    if status {
+        return "stat-value text-success"
+    } else {
+        return "stat-value text-error"
+    }
 }

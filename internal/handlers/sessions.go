@@ -76,7 +76,9 @@ func StartSessionHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("HX-Request") == "true" {
 		// Get updated dashboard content
 		recentSessions := SessionStore.GetRecent(5)
-		component := pages.DashboardContent(recentSessions)
+		// Get the system status
+		status := models.SystemStatusStoreInstance.Get()
+		component := pages.DashboardContent(recentSessions, status)
 
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		if err := component.Render(r.Context(), w); err != nil {
@@ -228,8 +230,15 @@ func WebSocketSessionHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error upgrading to WebSocket: %v", err)
 		return
 	}
-	defer conn.Close()
+	defer func() {
+		// Update system status when connection closes
+		models.SystemStatusStoreInstance.UpdateWebSocketConnection(false)
+		conn.Close()
+		log.Println("WebSocket connection closed")
+	}()
 
+	// Update system status when connection is established
+	models.SystemStatusStoreInstance.UpdateWebSocketConnection(true)
 	log.Println("WebSocket connection established")
 
 	// Process messages
@@ -487,6 +496,9 @@ func sendToUnrealEngine(payload []byte) {
 	// TODO: Get this from settings
 	unrealEndpoint := "http://localhost:8081/api/vr-session"
 
+	// Update system status to show connection attempt
+	models.SystemStatusStoreInstance.UpdateUnrealEngineConnection(true)
+
 	// For now, just log the payload
 	log.Printf("Would send to Unreal Engine: %s", unrealEndpoint)
 
@@ -495,6 +507,9 @@ func sendToUnrealEngine(payload []byte) {
 	if err := json.Indent(&prettyJSON, payload, "", "  "); err == nil {
 		log.Printf("Payload: %s", prettyJSON.String())
 	}
+
+	// Simulate Unreal Engine ready state for development
+	models.SystemStatusStoreInstance.UpdateUnrealEngineReady(true)
 
 	// In production, uncomment this code to actually send the request
 	/*
@@ -505,6 +520,9 @@ func sendToUnrealEngine(payload []byte) {
 		req, err := http.NewRequest("POST", unrealEndpoint, bytes.NewBuffer(payload))
 		if err != nil {
 			log.Printf("Error creating request: %v", err)
+			// Update system status to show connection failure
+			models.SystemStatusStoreInstance.UpdateUnrealEngineConnection(false)
+			models.SystemStatusStoreInstance.UpdateUnrealEngineReady(false)
 			return
 		}
 
@@ -513,9 +531,19 @@ func sendToUnrealEngine(payload []byte) {
 		resp, err := client.Do(req)
 		if err != nil {
 			log.Printf("Error sending request to Unreal Engine: %v", err)
+			// Update system status to show connection failure
+			models.SystemStatusStoreInstance.UpdateUnrealEngineConnection(false)
+			models.SystemStatusStoreInstance.UpdateUnrealEngineReady(false)
 			return
 		}
 		defer resp.Body.Close()
+
+		// Update system status based on response
+		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+			models.SystemStatusStoreInstance.UpdateUnrealEngineReady(true)
+		} else {
+			models.SystemStatusStoreInstance.UpdateUnrealEngineReady(false)
+		}
 
 		log.Printf("Unreal Engine response status: %s", resp.Status)
 	*/

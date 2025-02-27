@@ -17,7 +17,7 @@ gcloud run deploy ${SERVICE_NAME} \
   --region ${REGION} \
   --allow-unauthenticated \
   --project ${PROJECT_ID} \
-  --set-env-vars=ENV=production \
+  --set-env-vars=ENV=production,UNREAL_ENGINE_URL=http://localhost:8081 \
   --cpu 1 \
   --memory 512Mi \
   --max-instances 2

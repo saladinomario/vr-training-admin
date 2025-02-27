@@ -1,5 +1,7 @@
 package main
 
+//Version 1.0
+
 import (
 	"log"
 	"net/http"

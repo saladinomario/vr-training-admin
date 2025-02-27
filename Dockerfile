@@ -36,7 +36,6 @@ COPY --from=builder /app/main .
 COPY --from=builder /app/static ./static
 COPY --from=builder /app/templates ./templates
 COPY --from=builder /app/data ./data
-COPY --from=builder /app/.env ./
 
 # Expose the port the app runs on
 EXPOSE 8080
